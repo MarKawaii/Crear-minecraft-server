@@ -1,8 +1,17 @@
 param (
     [string]$Folder,
     [string]$ServerVersion,
+    [string]$ServerIP,
     [int]$RAM = 1024 # Establece un valor predeterminado de 1024 MB de RAM
 )
+Write-Host "-----------------------------------------------------------------"
+Write-Host "-------------------------INFORMACION-----------------------------"
+Write-Host "-----------------------------------------------------------------"
+Write-Host "Nombre de la carpeta: $Folder"
+Write-Host "Ip: $ServerIP"
+Write-Host "Cantidad de ram asignada: $RAM"
+Write-Host "version del servidor: $ServerVersion"
+Write-Host "-----------------------------------------------------------------"
 
 function DescargarServidor {
     param (
@@ -77,68 +86,86 @@ function GenerarEula {
 
 function GenerarServerProperties {
     param (
-        [string]$ruta_carpeta_servidor
+        [string]$ruta_carpeta_servidor,
+        [string]$IP
     )
 
-    $contenido_server_properties = @"
-#Minecraft server properties
-#Mon May 01 13:27:49 CLT 2023
-allow-flight=false
-allow-nether=true
-broadcast-console-to-ops=true
-broadcast-rcon-to-ops=true
-difficulty=easy
-enable-command-block=false
-enable-jmx-monitoring=false
-enable-query=false
-enable-rcon=false
-enable-status=true
-enforce-whitelist=false
-entity-broadcast-range-percentage=100
-force-gamemode=false
-function-permission-level=2
-gamemode=survival
-generate-structures=true
-generator-settings={}
-hardcore=false
-hide-online-players=false
-level-name=world
-level-seed=
-level-type=default
-max-players=20
-max-tick-time=60000
-max-world-size=29999984
-motd=A Minecraft Server
-network-compression-threshold=256
-online-mode=true
-op-permission-level=4
-player-idle-timeout=0
-prevent-proxy-connections=false
-pvp=true
-query.port=25565
-rate-limit=0
-rcon.password=
-rcon.port=25575
-require-resource-pack=false
-resource-pack=
-resource-pack-prompt=
-resource-pack-sha1=
-server-ip=
-server-port=25565
-simulation-distance=10
-spawn-animals=true
-spawn-monsters=true
-spawn-npcs=true
-spawn-protection=16
-sync-chunk-writes=true
-text-filtering-config=
-use-native-transport=true
-view-distance=10
-white-list=false
-"@
     $ruta_archivo_server_properties = Join-Path $ruta_carpeta_servidor "server.properties"
-    Set-Content -Path $ruta_archivo_server_properties -Value $contenido_server_properties
+
+    if (Test-Path $ruta_archivo_server_properties) {
+        $contenido_actual = Get-Content -Path $ruta_archivo_server_properties
+        $nuevo_contenido = @()
+
+        foreach ($linea in $contenido_actual) {
+            if ($linea.StartsWith("server-ip=")) {
+                $nuevo_contenido += "server-ip=$IP"
+            } else {
+                $nuevo_contenido += $linea
+            }
+        }
+
+        Set-Content -Path $ruta_archivo_server_properties -Value $nuevo_contenido
+    } else {
+        $contenido_server_properties = @"
+        #Minecraft server properties
+        #Mon May 01 13:27:49 CLT 2023
+        allow-flight=false
+        allow-nether=true
+        broadcast-console-to-ops=true
+        broadcast-rcon-to-ops=true
+        difficulty=easy
+        enable-command-block=false
+        enable-jmx-monitoring=false
+        enable-query=false
+        enable-rcon=false
+        enable-status=true
+        enforce-whitelist=false
+        entity-broadcast-range-percentage=100
+        force-gamemode=false
+        function-permission-level=2
+        gamemode=survival
+        generate-structures=true
+        generator-settings={}
+        hardcore=false
+        hide-online-players=false
+        level-name=world
+        level-seed=
+        level-type=default
+        max-players=20
+        max-tick-time=60000
+        max-world-size=29999984
+        motd=A Minecraft Server
+        network-compression-threshold=256
+        online-mode=true
+        op-permission-level=4
+        player-idle-timeout=0
+        prevent-proxy-connections=false
+        pvp=true
+        query.port=25565
+        rate-limit=0
+        rcon.password=
+        rcon.port=25575
+        require-resource-pack=false
+        resource-pack=
+        resource-pack-prompt=
+        resource-pack-sha1=
+        server-ip=$ServerIP
+        server-port=25565
+        simulation-distance=10
+        spawn-animals=true
+        spawn-monsters=true
+        spawn-npcs=true
+        spawn-protection=16
+        sync-chunk-writes=true
+        text-filtering-config=
+        use-native-transport=true
+        view-distance=10
+        white-list=false        
+"@
+        Set-Content -Path $ruta_archivo_server_properties -Value $contenido_server_properties
+    }
 }
+
 
 
 function GenerarReadme {
@@ -179,7 +206,7 @@ CrearArchivosEjecucion -ruta_carpeta_servidor $ruta_carpeta_servidor -RAM $RAM
 GenerarEula -ruta_carpeta_servidor $ruta_carpeta_servidor
 
 # Genera el archivo server.properties
-GenerarServerProperties -ruta_carpeta_servidor $ruta_carpeta_servidor
+GenerarServerProperties -ruta_carpeta_servidor $ruta_carpeta_servidor -IP $IP
 
 # Genera el archivo README.txt
 GenerarReadme -ruta_carpeta_servidor $ruta_carpeta_servidor
