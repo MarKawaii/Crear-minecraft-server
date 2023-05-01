@@ -1,26 +1,27 @@
-Add-Type -AssemblyName PresentationFramework
+# Cargar las ensamblados de WPF
+Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
 
-$xaml = Get-Content -Path 'view\index.xaml' | Out-String
-$reader = (New-Object System.Xml.XmlNodeReader $xaml)
-$form = [Windows.Markup.XamlReader]::Load( $reader )
+# Importar el archivo XAML
+[xml]$xaml = Get-Content -Path ".\view\index.xaml"
 
-$form.ShowDialog() | Out-Null
+# Crear un objeto de ventana
+$window = [Windows.Markup.XamlReader]::Load((New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $xaml))
 
-$nombreCarpeta = $form.txtNombreCarpeta.Text
-$numeroPuerto = $form.txtNumeroPuerto.Text
+# Obtener elementos de la ventana
+$submitButton = $window.FindName("SubmitButton")
+$folderInput = $window.FindName("FolderInput")
 
-if ([string]::IsNullOrWhiteSpace($nombreCarpeta)) {
-    Write-Host "El nombre de la carpeta no puede estar vacío."
-    return
-}
+# Función para manejar el evento de clic del botón
+$submitButton.Add_Click({
+    $folderName = $folderInput.Text
 
-# Crear la carpeta
-New-Item -ItemType Directory -Path $nombreCarpeta
+    if (-not ([string]::IsNullOrEmpty($folderName))) {
+        & ".\script\crear.ps1" -Folder $folderName
+        $window.Close()
+    } else {
+        [System.Windows.MessageBox]::Show("Por favor, complete todos los campos.")
+    }
+})
 
-# Crear el archivo de configuración
-$configuracion = @"
-server-port=$numeroPuerto
-"@
-Set-Content -Path "$nombreCarpeta\server.properties" -Value $configuracion
-
-Write-Host "Servidor creado exitosamente en la carpeta $nombreCarpeta con el puerto $numeroPuerto"
+# Mostrar la ventana
+$window.ShowDialog() | Out-Null
