@@ -1,13 +1,28 @@
 param (
-    [string]$Folder
+    [string]$Folder,
+    [string]$ServerVersion
 )
 
 function DescargarServidor {
     param (
-        [string]$ruta_carpeta_servidor
+        [string]$ruta_carpeta_servidor,
+        [string]$version
     )
 
-    $url = "https://launcher.mojang.com/v1/objects/1b557e7b033b583cd9f66746b7a9ab1ec1673ced/server.jar"
+    $url_base = "https://launchermeta.mojang.com/v1/packages/"
+    $response = Invoke-WebRequest -Uri "https://launchermeta.mojang.com/mc/game/version_manifest.json" -UseBasicParsing
+    $version_manifest = $response | ConvertFrom-Json
+    $version_info = $version_manifest.versions | Where-Object { $_.id -eq $version }
+
+    if ($null -eq $version_info) {
+        Write-Error "Versión del servidor no soportada."
+        exit 1
+    }
+
+    $version_manifest_url = $version_info.url
+    $version_response = Invoke-WebRequest -Uri $version_manifest_url -UseBasicParsing
+    $version_data = $version_response | ConvertFrom-Json
+    $server_download_url = $version_data.downloads.server.url
     $archivo_servidor = "minecraft_server.jar"
 
     Write-Host "Descargando el archivo del servidor de Minecraft..."
@@ -15,7 +30,7 @@ function DescargarServidor {
     try {
         $client = New-Object System.Net.WebClient
         $ruta_archivo_servidor = Join-Path $ruta_carpeta_servidor $archivo_servidor
-        $client.DownloadFile($url, $ruta_archivo_servidor)
+        $client.DownloadFile($server_download_url, $ruta_archivo_servidor)
         Write-Host "Archivo del servidor descargado correctamente."
     } catch {
         Write-Error "Error al descargar el archivo del servidor: $_"
@@ -87,7 +102,8 @@ if (-not (Test-Path $ruta_carpeta_servidor)) {
 }
 
 # Descarga el archivo del servidor
-DescargarServidor -ruta_carpeta_servidor $ruta_carpeta_servidor
+DescargarServidor -ruta_carpeta_servidor $ruta_carpeta_servidor -version $ServerVersion
+
 
 # Crea los archivos de ejecución
 CrearArchivosEjecucion -ruta_carpeta_servidor $ruta_carpeta_servidor
