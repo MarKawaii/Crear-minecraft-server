@@ -7,6 +7,13 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
 # Crear un objeto de ventana
 $window = [Windows.Markup.XamlReader]::Load((New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $xaml))
 
+# Cargar la imagen de fondo
+$backgroundImageBrush = $window.FindName("BackgroundImageBrush")
+$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
+$imagePath = Join-Path -Path $scriptPath -ChildPath "img\backgroud.png"
+$imageSource = [System.Windows.Media.Imaging.BitmapImage]::new($imagePath)
+$backgroundImageBrush.ImageSource = $imageSource
+
 # Obtener elementos de la ventana
 $submitButton = $window.FindName("SubmitButton")
 $folderInput = $window.FindName("FolderInput")

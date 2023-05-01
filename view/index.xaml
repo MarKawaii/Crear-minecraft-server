@@ -4,7 +4,7 @@
     <Window.Resources>
         <Style TargetType="Button" x:Key="ButtonStyle">
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="#8B8D8B" />
+            <Setter Property="Background" Value="#419958" />
             <Setter Property="FontSize" Value="18" />
             <Setter Property="Padding" Value="15,10" />
             <Setter Property="Margin" Value="10,0,0,10" />
@@ -22,7 +22,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#8B8D8B" />
+                                <Setter Property="Background" Value="#419958" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -36,7 +36,10 @@
             <Setter Property="Foreground" Value="Black" />
         </Style>
     </Window.Resources>
-   <Grid Background="#359843">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush x:Name="BackgroundImageBrush" Stretch="UniformToFill"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -46,18 +49,18 @@
         </Grid.RowDefinitions>
         <Image x:Name="Logo" Grid.Row="1" Source="logo_negro.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="148.5" Height="142.5" />
         <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Label Content="Nombre de la carpeta:" Margin="0,10,0,0" />
+            <Label Content="Nombre de la carpeta:" Margin="0,10,0,0"  Foreground="White"/>
             <TextBox x:Name="FolderInput" />
-            <Label Content="Direccion IPv4:" Margin="0,10,0,0" />
+            <Label Content="Direccion IPv4:" Margin="0,10,0,0" Foreground="White"/>
             <TextBox x:Name="IPInput" />
-            <Label Content="Version del servidor:" Margin="0,10,0,0" />
+            <Label Content="Version del servidor:" Margin="0,10,0,0" Foreground="White" />
             <ComboBox x:Name="VersionInput">
                 <ComboBoxItem Content="1.16.5" />
                 <ComboBoxItem Content="1.17" />
                 <ComboBoxItem Content="1.18.2" />
                 <ComboBoxItem Content="Otra versión" />
             </ComboBox>
-            <Label Content="RAM asignada (en MB):" Margin="0,10,0,0" />
+            <Label Content="RAM asignada (en MB):" Margin="0,10,0,0" Foreground="White" />
             <ComboBox x:Name="RAMInput">
                 <ComboBoxItem Content="512" />
                 <ComboBoxItem Content="1024" />
