@@ -18,18 +18,16 @@ $backgroundImageBrush.ImageSource = $imageSource
 $submitButton = $window.FindName("SubmitButton")
 $folderInput = $window.FindName("FolderInput")
 $versionInput = $window.FindName("VersionInput")
-$IPInput = $window.FindName("IPInput")
 $RAMInput = $window.FindName("RAMInput")
 
 # Función para manejar el evento de clic del botón
 $submitButton.Add_Click({
     $folderName = $folderInput.Text
     $version = $versionInput.Text
-    $IP = $IPInput.Text
     $RAM = $RAMInput.Text
 
     if (-not ([string]::IsNullOrEmpty($folderName)) -and -not ([string]::IsNullOrEmpty($version)) -and -not ([string]::IsNullOrEmpty($RAM))) {
-        & ".\script\crear.ps1" -Folder $folderName -ServerVersion $version -ServerIP $IP -ServerRAM $RAM
+        & ".\script\crear.ps1" -Folder $folderName -ServerVersion $version -ServerRAM $RAM
         $window.Close()
     } else {
         [System.Windows.MessageBox]::Show("Por favor, complete todos los campos.")

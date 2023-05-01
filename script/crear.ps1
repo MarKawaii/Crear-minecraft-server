@@ -1,9 +1,12 @@
 param (
     [string]$Folder,
     [string]$ServerVersion,
-    [string]$ServerIP,
     [int]$RAM = 1024 # Establece un valor predeterminado de 1024 MB de RAM
 )
+
+$IPv4 = (Test-Connection -ComputerName (hostname) -Count 1).IPv4Address.IPAddressToString
+$ServerIP = $IPv4
+
 Write-Host "-----------------------------------------------------------------"
 Write-Host "-------------------------INFORMACION-----------------------------"
 Write-Host "-----------------------------------------------------------------"
