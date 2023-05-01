@@ -48,12 +48,19 @@
         <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Label Content="Nombre de la carpeta:" Margin="0,10,0,0" />
             <TextBox x:Name="FolderInput" />
-            <Label Content="Versión del servidor:" Margin="0,10,0,0" />
+            <Label Content="Version del servidor:" Margin="0,10,0,0" />
             <ComboBox x:Name="VersionInput">
                 <ComboBoxItem Content="1.16.5" />
                 <ComboBoxItem Content="1.17" />
                 <ComboBoxItem Content="1.18.2" />
                 <ComboBoxItem Content="Otra versión" />
+            </ComboBox>
+            <Label Content="RAM asignada (en MB):" Margin="0,10,0,0" />
+            <ComboBox x:Name="RAMInput">
+                <ComboBoxItem Content="512" />
+                <ComboBoxItem Content="1024" />
+                <ComboBoxItem Content="2048" />
+                <ComboBoxItem Content="4096" />
             </ComboBox>
             <Button x:Name="SubmitButton" Content="Crear servidor" Margin="0,20,0,0" Style="{StaticResource ButtonStyle}" />
         </StackPanel>

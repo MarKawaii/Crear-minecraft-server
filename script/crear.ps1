@@ -1,6 +1,7 @@
 param (
     [string]$Folder,
-    [string]$ServerVersion
+    [string]$ServerVersion,
+    [int]$RAM = 1024 # Establece un valor predeterminado de 1024 MB de RAM
 )
 
 function DescargarServidor {
@@ -32,7 +33,8 @@ function DescargarServidor {
         $ruta_archivo_servidor = Join-Path $ruta_carpeta_servidor $archivo_servidor
         $client.DownloadFile($server_download_url, $ruta_archivo_servidor)
         Write-Host "Archivo del servidor descargado correctamente."
-    } catch {
+    }
+    catch {
         Write-Error "Error al descargar el archivo del servidor: $_"
         exit 1
     }
@@ -40,13 +42,14 @@ function DescargarServidor {
 
 function CrearArchivosEjecucion {
     param (
-        [string]$ruta_carpeta_servidor
+        [string]$ruta_carpeta_servidor,
+        [int]$RAM
     )
 
     $nombre_archivo_ps1 = "script.ps1"
     $contenido_archivo_ps1 = @"
 Set-Location '$ruta_carpeta_servidor'
-java -Xmx1024M -Xms1024M -jar minecraft_server.jar nogui
+java -Xmx${RAM}M -Xms${RAM}M -jar minecraft_server.jar nogui
 "@
     $ruta_archivo_ps1 = Join-Path $ruta_carpeta_servidor $nombre_archivo_ps1
     Set-Content -Path $ruta_archivo_ps1 -Value $contenido_archivo_ps1
@@ -60,7 +63,6 @@ pause
     $ruta_archivo_bat = Join-Path $ruta_carpeta_servidor $nombre_archivo_bat
     Set-Content -Path $ruta_archivo_bat -Value $contenido_archivo_bat
 }
-
 function GenerarEula {
     param (
         [string]$ruta_carpeta_servidor
@@ -72,6 +74,72 @@ function GenerarEula {
         Set-Content -Path $ruta_archivo_eula -Value "eula=true"
     }
 }
+
+function GenerarServerProperties {
+    param (
+        [string]$ruta_carpeta_servidor
+    )
+
+    $contenido_server_properties = @"
+#Minecraft server properties
+#Mon May 01 13:27:49 CLT 2023
+allow-flight=false
+allow-nether=true
+broadcast-console-to-ops=true
+broadcast-rcon-to-ops=true
+difficulty=easy
+enable-command-block=false
+enable-jmx-monitoring=false
+enable-query=false
+enable-rcon=false
+enable-status=true
+enforce-whitelist=false
+entity-broadcast-range-percentage=100
+force-gamemode=false
+function-permission-level=2
+gamemode=survival
+generate-structures=true
+generator-settings={}
+hardcore=false
+hide-online-players=false
+level-name=world
+level-seed=
+level-type=default
+max-players=20
+max-tick-time=60000
+max-world-size=29999984
+motd=A Minecraft Server
+network-compression-threshold=256
+online-mode=true
+op-permission-level=4
+player-idle-timeout=0
+prevent-proxy-connections=false
+pvp=true
+query.port=25565
+rate-limit=0
+rcon.password=
+rcon.port=25575
+require-resource-pack=false
+resource-pack=
+resource-pack-prompt=
+resource-pack-sha1=
+server-ip=
+server-port=25565
+simulation-distance=10
+spawn-animals=true
+spawn-monsters=true
+spawn-npcs=true
+spawn-protection=16
+sync-chunk-writes=true
+text-filtering-config=
+use-native-transport=true
+view-distance=10
+white-list=false
+"@
+    $ruta_archivo_server_properties = Join-Path $ruta_carpeta_servidor "server.properties"
+    Set-Content -Path $ruta_archivo_server_properties -Value $contenido_server_properties
+}
+
 
 function GenerarReadme {
     param (
@@ -104,12 +172,14 @@ if (-not (Test-Path $ruta_carpeta_servidor)) {
 # Descarga el archivo del servidor
 DescargarServidor -ruta_carpeta_servidor $ruta_carpeta_servidor -version $ServerVersion
 
-
 # Crea los archivos de ejecución
-CrearArchivosEjecucion -ruta_carpeta_servidor $ruta_carpeta_servidor
+CrearArchivosEjecucion -ruta_carpeta_servidor $ruta_carpeta_servidor -RAM $RAM
 
 # Genera el archivo eula.txt
 GenerarEula -ruta_carpeta_servidor $ruta_carpeta_servidor
+
+# Genera el archivo server.properties
+GenerarServerProperties -ruta_carpeta_servidor $ruta_carpeta_servidor
 
 # Genera el archivo README.txt
 GenerarReadme -ruta_carpeta_servidor $ruta_carpeta_servidor
