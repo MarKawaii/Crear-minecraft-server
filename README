@@ -1,0 +1,27 @@
+# Crear servidor de Minecraft
+
+Este script de PowerShell crea un servidor de Minecraft en tu escritorio con la configuración especificada. El script realiza las siguientes tareas:
+
+1. Descarga el archivo del servidor de Minecraft.
+2. Crea archivos de ejecución (.bat y .ps1) para iniciar y detener el servidor.
+3. Genera el archivo eula.txt necesario para aceptar los términos y condiciones de Minecraft.
+4. Genera el archivo server.properties con la configuración básica del servidor, incluida la dirección IP del servidor.
+5. Crea un archivo README.txt con instrucciones básicas para iniciar y detener el servidor.
+6. Crea un script para abrir los puertos necesarios en el firewall de Windows.
+
+## Requisitos
+
+- PowerShell
+- Java instalado en tu computadora
+
+## Uso
+
+1. Abre PowerShell y navega hasta la ubicación del script.
+2. Ejecuta el script proporcionando los parámetros necesarios, como la ruta de la carpeta, la versión del servidor y la cantidad de RAM asignada. Por ejemplo: .\crear.ps1 -Folder "MiServidorMinecraft" -ServerVersion "1.17.1" -RAM 2048
+3. El script creará una carpeta en el escritorio con los archivos y configuraciones del servidor.
+4. Abre la carpeta del servidor y ejecuta el archivo 'Iniciar.bat' para iniciar el servidor.
+5. Para detener el servidor, escribe 'stop' en la ventana de línea de comandos y presiona Enter.
+
+## Advertencia
+
+Este script fue creado y probado en un entorno específico. El uso en otros entornos puede producir resultados diferentes o no funcionar como se espera. Siempre es recomendable realizar copias de seguridad y pruebas antes de utilizar scripts de terceros en tu sistema.
