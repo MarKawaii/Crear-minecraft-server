@@ -4,8 +4,8 @@
     <Window.Resources>
         <Style TargetType="Button" x:Key="ButtonStyle">
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="#419958" />
-            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Background" Value="#737373" />
+            <Setter Property="FontSize" Value="22" />
             <Setter Property="Padding" Value="15,10" />
             <Setter Property="Margin" Value="10,0,0,10" />
             <Setter Property="MinWidth" Value="150" />
@@ -17,12 +17,12 @@
                         <Border BorderThickness="{TemplateBinding BorderThickness}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="5">
+                                CornerRadius="0">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#419958" />
+                                <Setter Property="Background" Value="#9E9E9E" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -30,10 +30,12 @@
             </Setter>
         </Style>
         <Style TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="15" />
         </Style>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="Black" />
+            <Setter Property="FontSize" Value="15" />
         </Style>
     </Window.Resources>
     <Grid>
@@ -43,23 +45,23 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="15"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Image x:Name="Logo" Grid.Row="1" Source="logo_negro.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="148.5" Height="142.5" />
-        <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Label Content="Nombre de la carpeta:" Margin="0,10,0,0"  Foreground="White"/>
-            <TextBox x:Name="FolderInput" />
-            <Label Content="Version del servidor:" Margin="0,10,0,0" Foreground="White" />
-            <ComboBox x:Name="VersionInput">
+                <StackPanel Grid.Row="3" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="Nombre de la carpeta:" Margin="0,10,0,0" />
+            <TextBox x:Name="FolderInput" FontSize="15" Margin="0,0,0,10" />
+            <Label Content="Version del servidor:" Margin="0,10,0,0" />
+            <ComboBox x:Name="VersionInput" FontSize="15" Margin="0,0,0,10">
                 <ComboBoxItem Content="1.16.5" />
                 <ComboBoxItem Content="1.17" />
                 <ComboBoxItem Content="1.18.2" />
                 <ComboBoxItem Content="Otra version" />
             </ComboBox>
-            <Label Content="RAM asignada (en MB):" Margin="0,10,0,0" Foreground="White" />
-            <ComboBox x:Name="RAMInput">
+            <Label Content="RAM asignada (en MB):" Margin="0,10,0,0" />
+            <ComboBox x:Name="RAMInput" FontSize="15" Margin="0,0,0,10">
                 <ComboBoxItem Content="512" />
                 <ComboBoxItem Content="1024" />
                 <ComboBoxItem Content="2048" />
@@ -69,3 +71,4 @@
         </StackPanel>
     </Grid>
 </Window>
+
